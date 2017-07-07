@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+    <style>
+    	body {font-family: sans-serif; font-size: 14px;}
+        #crowd {
+            position: relative;
+            border-bottom: solid 1px #eee;
+        }
+        .spacer {
+            display: inline-block;
+            height: 350px;
+            width: 1px;
+            margin-right: -1px;
+        }
+        .mark1 {
+            position: absolute;
+            height: 50px;
+            width: 100%;
+            border-top: solid 1px;
+            border-bottom: solid 1px;
+            border-color: #eee;
+            bottom: 51px;
+            box-sizing: border-box;
+        }
+        .p {
+            border: solid 1px #fff;
+            display: inline-block;
+            width: calc(2% - 1px);
+            height: 100px;
+            box-sizing: border-box;
+            margin-right: 1px;
+            vertical-align: bottom;
+            position: relative;
+            text-align: center;
+        }
+        .p > span {
+        	position: absolute;
+        	bottom: -21px;
+        	left: 0;
+        	right: 0;
+        	display: inline-block;
+        }
+        .ibox {
+        	display: inline-block;
+        	width: 25%;
+            margin-top: 35px;
+        	margin-right: 20px;
+        	border: solid 1px #ccc;
+        	padding: 10px;
+            vertical-align: top;
+        }
+        .controls {
+        	line-height: 30px;
+        }
+        input[type=button] {
+            padding: 5px;
+		    background: #f3f1ec;
+		    border: solid #ccc 1px;
+		    min-width: 90px;
+		    outline: none;
+        }
+        input[type=button]:active {
+            background: #ccccff;
+        }
+
+        .notes {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="crowd"><div class="spacer"></div><div class="mark1"></div></div>
+    <div class="ibox controls">
+        <input type="button" value="start/stop" onclick="toggleStart()">
+        <input type="button" value="reset" onclick="reset()">
+        <br/>
+        <label><input type="checkbox" id="show-id" onchange="display()"> <span>show identities</span></label>
+        <br/>
+        <label><input type="checkbox" id="even" checked> <span>fixed spending</span></label>
+        <br/>
+        <label><input type="checkbox" id="sorted"> <span>sorted</span></label>
+    </div>
+
+    <div class="ibox info">
+        Iteration: <span id="iter"></span><br/>
+        Top 20% has: <span id="per10"></span>%
+    </div>
+
+    <div class="notes">
+        The experiment setup:<br/>
+        We have a population of 50 individuals, each of them starts with $50. At each time step, each person spends an amount by giving it to someone else, a randomly chosen person. The amount is $1 with "fixed spending" checked.
+        <br/>
+        Click start to start the experiment.<br/>
+        <br/>
+        Check "sorted" to have the people sorted by their current wealth. This only affects how they are displayed. You'd be surprized how "unequal" the random society looks, but make no mistake, there's plenty of mobility. Click "show identities" to see how each individual goes through all positions given enough time.
+        <br/>
+        Now uncheck "fixed spending" and the people will spend depending on their wealth: $0.5 fixed plus an amount proportional with the person's wealth so that the average people will spend a total of $1, like in the fixed spending. Top 20% of the people will own about 25% of the whole economy. Amazing how equal the random society becomes, even without any explicit taxation.
+    </div>
+
+
+    <script>
+    var iid = 0;
+    var MAX = 50;
+    let list = new Array(MAX).fill(MAX);
+
+    for(let i=0; i<list.length; i++) {
+        $('#crowd').append($('<div class="p"><span></span></div>').attr('id', 'p'+i));
+    }
+    let iter = 0;
+    function timeStep() {
+		let uneven = !$('#even').prop('checked');
+
+        for(let e=0; e<10; e++) {
+            for(let i=0; i<list.length; i++) {        
+                if (list[i] > 0) {
+                    let n = Math.floor(Math.random() * MAX);
+                    let amount = uneven ? 0.5 + list[i]/MAX/2 : 1;
+                    list[i] -= amount;
+                    list[n] += amount;
+                }
+            }
+            iter += 1;
+        }
+        display();
+
+        iid = setTimeout(timeStep, 1);
+    }
+
+    function display() {
+        var sList;
+        let showId = $('#show-id').prop('checked');
+        if (!showId) {
+        	$('#crowd > div.p').css('background', '').css('border-color', '#999');
+        	$('#crowd > div.p > span').text('');
+        }
+
+        sList = list.map((v, i) => [i, v]);
+        let sorted = $('#sorted').prop('checked');
+        if (sorted)
+        	sList = sList.sort((a,b) => a[1] - b[1]);
+
+        sList.forEach((k, i) => {
+        	let p = $('#p'+i);
+        	p.height(k[1]);
+        	if (showId) {
+            	p.find('>span').text(k[0]);
+        		p.css('background', '#' + Math.round(k[0]/MAX*0xffffff).toString(16));
+            	if(k[0]==0) {
+            		p.css('border-color', 'red')
+            	} else {
+            		p.css('border-color', '')
+            	}
+            }
+        });
+
+        $('#iter').text(iter);
+        let p10 = 0;
+        if (!sorted)
+        	sList = sList.sort((a,b) => a[1] - b[1]);
+        for(let i=0; i<.2*MAX; i++) {
+            p10 += sList[MAX-1-i][1];
+        }
+        $('#per10').text(Math.round(p10/MAX/MAX*100));
+    }
+
+    function toggleStart() {
+    	if(iid == 0) {
+    		clearTimeout(iid);
+    		iid = setTimeout(timeStep, 1);
+    	} else {
+    		clearTimeout(iid);
+    		iid = 0;
+    	}
+
+    }
+
+    function reset() {
+    	list = new Array(MAX).fill(MAX);
+    	display();
+    }
+
+    display();
+    </script>
+</body>
+</html>
