@@ -76,6 +76,15 @@
 </head>
 <body>
 
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9&appId=137516959602529";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
     <div id="crowd"><div class="spacer"></div><div class="mark1"></div></div>
     <div class="ibox controls">
         <input type="button" value="start/stop" onclick="toggleStart()">
@@ -103,6 +112,9 @@
         <br/>
         Now uncheck "fixed spending" and the people will spend depending on their wealth: $0.5 fixed plus an amount proportional with the person's wealth so that the average people will spend a total of $1, like in the fixed spending. Top 20% of the people will own about 25% of the whole economy. Amazing how equal the random society becomes, even without any explicit taxation.
     </div>
+    <br/>
+    <br/>
+    <div class="fb-comments" data-href="http://dvictor.github.io/uneq/"></div>
 
 
     <script>
@@ -198,6 +210,8 @@
   ga('create', 'UA-102222547-1', 'auto');
   ga('send', 'pageview');
 
-</script>    
+</script>
+
+
 </body>
 </html>
