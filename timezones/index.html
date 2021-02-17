@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Timezones</title>
+    <style type="text/css">
+        body {
+            font-family: sans-serif;
+            color: #444;
+            white-space: nowrap;
+        }
+        .zone {
+            margin-bottom: 10px;
+        }
+        .swatch {
+            text-align: center;
+            border: solid 1px #fff;
+            border-bottom-width: 2px;
+            display: inline-block;
+            width: 26px;
+            padding: 4px;
+            margin-right: -1px;
+            background: #e3e3e3;
+            cursor: default;
+        }
+        .swatch.on {
+            background: #c0ef8f;
+        }
+        .swatch.selected {
+            background: #d1d1d1;
+        }
+        .swatch.selected.on {
+            background: #a4cf78;
+        }
+        .name {
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        let root = document.body;
+        const h24 = true
+
+        function addZone(root, name, tz) {
+            let parent = document.createElement('div')
+            parent.classList.add('zone')
+            root.appendChild(parent)
+
+            let now = new Date()
+            let t = new Date(now.toLocaleString('en-US', {timeZone: tz}))
+            let diff = t.getHours() - now.getHours()
+
+            for (let i = 0; i < 24; i++) {
+                let d = document.createElement('div')
+                d.classList.add('swatch')
+                let h = (i + diff + 24) % 24
+                if (h >= 9 && h <= 17) d.classList.add('on')
+                if (h24) {
+                    d.innerHTML = `${h}`
+                } else {
+                    d.innerHTML = `${h > 12 ? h - 12 : h}<small>${h < 12 ? '' : 'p'}</small>`
+                }
+                d.dataset.idx = i
+                parent.appendChild(d)
+            }
+
+            let d = document.createElement('div')
+            d.classList.add('name')
+            d.innerText = `${name} ${diff}`
+            parent.appendChild(d)
+        }
+
+        addZone(root, 'Chicago', 'america/chicago')
+        addZone(root, 'Los Angeles', 'america/los_angeles')
+        addZone(root, 'Paris', 'CET')
+        addZone(root, 'London', 'europe/london')
+        addZone(root, 'Melbourne', 'australia/melbourne')
+        addZone(root, 'Bangalore', 'asia/kolkata')
+
+        document.addEventListener('mousedown', e => {
+            let sw = e.target
+            if (!sw.classList || !sw.classList.contains('swatch')) return
+            //sw.classList.toggle('selected')
+            let idx = sw.dataset.idx
+            document.querySelectorAll('div.swatch').forEach(d => {
+                if (d.dataset.idx === idx)
+                    d.classList.toggle('selected')
+            })
+            e.preventDefault()
+        })
+        
+    </script>
+</body>
+</html>
