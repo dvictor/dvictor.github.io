@@ -8,6 +8,10 @@
             font-family: sans-serif;
             color: #444;
             white-space: nowrap;
+            font-size: 16px;
+        }
+        sup {
+            font-size: 10px;
         }
         .zone {
             margin-bottom: 10px;
@@ -17,7 +21,7 @@
             border: solid 1px #fff;
             border-bottom-width: 2px;
             display: inline-block;
-            width: 26px;
+            width: 32px;
             padding: 4px;
             margin-right: -1px;
             background: #e3e3e3;
@@ -42,27 +46,26 @@
 
     <script>
         let root = document.body;
-        const h24 = true
 
         function addZone(root, name, tz) {
             let parent = document.createElement('div')
             parent.classList.add('zone')
             root.appendChild(parent)
 
-            let now = new Date()
-            let t = new Date(now.toLocaleString('en-US', {timeZone: tz}))
-            let diff = t.getHours() - now.getHours()
+            let today = new Date((new Date).toDateString())
+            today.setHours(12)
+            let ref = new Date(today.toLocaleString('en-US'/*, {timeZone: 'utc'}*/))
+            let t = new Date(today.toLocaleString('en-US', {timeZone: tz}))
+            let diff = (t.getTime() - ref.getTime()) / 3600 / 1000
 
             for (let i = 0; i < 24; i++) {
                 let d = document.createElement('div')
                 d.classList.add('swatch')
                 let h = (i + diff + 24) % 24
                 if (h >= 9 && h <= 17) d.classList.add('on')
-                if (h24) {
-                    d.innerHTML = `${h}`
-                } else {
-                    d.innerHTML = `${h > 12 ? h - 12 : h}<small>${h < 12 ? '' : 'p'}</small>`
-                }
+                let s = String(h)
+                if (s.endsWith('.5')) s = Math.floor(h) + '<sup>30</sup>'
+                d.innerHTML = s
                 d.dataset.idx = i
                 parent.appendChild(d)
             }
@@ -73,25 +76,30 @@
             parent.appendChild(d)
         }
 
-        addZone(root, 'Chicago', 'america/chicago')
-        addZone(root, 'Los Angeles', 'america/los_angeles')
-        addZone(root, 'Paris', 'CET')
-        addZone(root, 'London', 'europe/london')
-        addZone(root, 'Melbourne', 'australia/melbourne')
-        addZone(root, 'Bangalore', 'asia/kolkata')
+        function toggleColumn(idx) {
+            document.querySelectorAll('div.swatch').forEach(d => {
+                if (d.dataset.idx === String(idx))
+                    d.classList.toggle('selected')
+            })
+        }
 
         document.addEventListener('mousedown', e => {
             let sw = e.target
             if (!sw.classList || !sw.classList.contains('swatch')) return
-            //sw.classList.toggle('selected')
-            let idx = sw.dataset.idx
-            document.querySelectorAll('div.swatch').forEach(d => {
-                if (d.dataset.idx === idx)
-                    d.classList.toggle('selected')
-            })
+            toggleColumn(sw.dataset.idx)
             e.preventDefault()
         })
-        
-    </script>
+
+        addZone(root, 'Chicago', 'america/chicago')
+        addZone(root, 'Los Angeles', 'america/los_angeles')
+        addZone(root, 'Paris', 'europe/paris')
+        addZone(root, 'London', 'europe/london')
+        addZone(root, 'Melbourne', 'australia/melbourne')
+        addZone(root, 'Bangalore', 'asia/kolkata')
+        addZone(root, 'Beijing', 'asia/shanghai')
+        addZone(root, 'Bucharest', 'europe/bucharest')
+
+        toggleColumn((new Date).getHours())
+</script>
 </body>
 </html>
