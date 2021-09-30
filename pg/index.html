@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Paragliding Polar Curve</title>
+    <style> /* set the CSS */
+    .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 2px;
+    }
+
+    .line#tangent {
+        stroke: #77777799;
+    }
+
+    body {
+        font: 12px Arial;
+        color: #444;
+    }
+
+    text {
+        fill: #444;
+    }
+
+    #controls {
+        display: inline-block;
+        vertical-align: top;
+        box-shadow: 2px 2px 5px #00000033;
+        padding: 20px 10px;
+    }
+
+    #controls .value {
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 3px;
+    }
+
+    #controls > label > div {
+        margin-bottom: 10px;
+    }
+
+    .radio-group > label {
+        display: block;
+    }
+
+    .cases-out {
+        padding: 20px;
+        border: solid 1px #ccc;
+        margin-top: 20px;
+        position: relative;
+    }
+    .cases {
+        width: 300px;
+        overflow: hidden;
+    }
+
+    .cases > div {
+        width: 1800px;
+        margin-left: 0;
+        transition: margin-left 500ms;
+    }
+
+    .cases > div > div {
+        display: inline-block;
+        width: 300px;
+        min-height: 300px;
+        vertical-align: top;
+    }
+    .nav {
+        text-align: center;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+    .nav > span {
+        border-radius: 2px;
+        display: inline-block;
+        background: #ddd;
+        padding: 5px 6px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .air-speed-rect {
+        fill: none;
+        stroke: #444;
+        stroke-width: 1px;
+    }
+    </style>
+</head>
+<body>
+<svg></svg>
+<div id="controls">
+
+    <div class="radio-group">
+        <p>Choose Key Point:</p>
+        <label>
+            <input type="radio" name="glideName" value="Stall Point">
+            Stall Point
+        </label>
+        <label>
+            <input type="radio" name="glideName" value="Min Sink">
+            Min Sink
+        </label>
+        <label>
+            <input type="radio" name="glideName" value="Trim Speed">
+            Trim Speed
+        </label>
+        <label>
+            <input type="radio" name="glideName" value="Best Glide" checked>
+            Best Glide
+        </label>
+        <label>
+            <input type="radio" name="glideName" value="Top Speed">
+            Top Speed
+        </label>
+    </div>
+    <div class="cases-out">
+        <div class="nav">
+            <span id="prev-btn">« Prev</span>
+            <span id="next-btn">Next »</span>
+        </div>
+        <div class="cases">
+            <div>
+                <div>
+                    <h2>Lesson 1</h2>
+                    <p>Zero Wind: ground speed and air speed are the same.<br>
+                    Identify the key points on the polar curve.
+                    <ul>
+                        <li>Stall Point: from this point, if you apply any more break, the wing will stall.</li>
+                        <li>Minimum Sink: at this level of braking, the glider sinks the slowest.</li>
+                        <li>Trim Speed: the speed you get when you apply no break and no speed bar.</li>
+                        <li>Top Speed: the maximum horizontal speed - speed bar is fully pressed.</li>
+                    </ul>
+                    Click the radio buttons to display the glide ratio for each key point.</p>
+                </div><div>
+                    <h2>Lesson 2</h2>
+                    <p>Change the wind speed below to see how it affects best glide.<br>
+                    A negative value is head-wind.<br>
+                    A positive one is tail-wind.<br>
+                    <br>
+                    Notice how the air speed X axis moves together with the polar curve.
+                    If the air moves, the glider still flies the same relative to the air,
+                    but the ground speed is different.<br>
+                    <br>
+                    The glide ratio indicated is for the ground speed, this is the one that you care about.
+                    </p>
+                    <label>
+                        <div>Wind Speed</div>
+                        <input type="range" min="-30" max="30" id="wind-speed">
+                        <span class="value" id="wind-speed-num">0Km/h</span>
+                    </label>
+                </div><div>
+                    <h2>Lesson 3</h2>
+                    <p><b>Head-Wind 15Km/h</b><br>
+                        <br>
+                        See how best glide position has moved lower and to the right on the curve.<br>
+                        <br>
+                        For best glide you now apply some speedbar.<br>
+                        <br>
+                        You will sink faster but with greater horizontal speed.</p>
+                </div><div>
+                    <h2>Lesson 4</h2>
+                    <p><b>Tail-Wind 15Km/h</b>
+                    <br>
+                    Apply some break to improve your glide.
+                    </p>
+                </div><div>
+                    <h2>Lesson 5</h2>
+                    For this particular glider, at 21Km/h tail-wind, the glide ratio
+                    at minimum sink is the same as at trim speed.
+                    Still, best glide is somewhere
+                    in the middle od the two.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- load the d3.js library -->
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
