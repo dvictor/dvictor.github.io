@@ -1,0 +1,88 @@
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+
+.line#tangent {
+    stroke: #77777799;
+}
+
+body {
+    font: 12px Arial;
+    color: #444;
+}
+
+text {
+    fill: #444;
+}
+text.label {
+    cursor: pointer;
+}
+#tangent.red {
+    stroke: #ff000077;
+}
+
+#controls {
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: 2px 2px 5px #00000033;
+    padding: 20px 10px;
+}
+
+#controls .value {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 3px;
+}
+
+#controls > label > div {
+    margin-bottom: 10px;
+}
+
+.cases-out {
+    padding: 20px;
+    border: solid 1px #ccc;
+    margin-top: 20px;
+    position: relative;
+}
+.cases {
+    width: 300px;
+    overflow: hidden;
+}
+
+.cases > div {
+    width: 500%;
+    margin-left: 0;
+    transition: margin-left 500ms;
+}
+
+.cases > div > div {
+    display: inline-block;
+    width: 300px;
+    min-height: 300px;
+    vertical-align: top;
+}
+.nav {
+    text-align: center;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+.nav > span {
+    border-radius: 2px;
+    display: inline-block;
+    background: #ddd;
+    padding: 5px 6px;
+    cursor: pointer;
+    user-select: none;
+}
+.wind-speed-rect {
+    fill: none;
+    stroke: #444;
+    stroke-width: 1px;
+}
+#wind-speed-box {
+    cursor: pointer;
+}

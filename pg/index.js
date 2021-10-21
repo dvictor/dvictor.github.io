@@ -16,7 +16,7 @@ d3.selectAll('[name="glideName"]').on('change', () => {
 
 let lesson = 1
 function resetLesson() {
-	d3.select('[name="glideName"][value="Best Glide"]').node().click()
+	glideName = 'Best Glide'
 	setWindSpeed(0)
 }
 const lessonAction = {
@@ -48,6 +48,17 @@ function updLesson() {
 	lessonAction[lesson]()
 }
 
+let unit = 'Km/h'
+function setUnit(u) {
+	unit = u
+	renderAxes()
+	renderGlideText()
+	updateSpeedsInTexts()
+}
+function cs(kph) {
+	return (unit === 'Km/h' ? kph : kph * 0.621371).toFixed(1)
+}
+
 let glideName = 'Best Glide'
 
 
@@ -55,9 +66,9 @@ let windSpeed = 0
 
 function setWindSpeed(speed) {
 	windSpeed = speed
-	d3.select('#wind-speed-num').text(windSpeed + 'Km/h')
-	d3.select('#air-speed-box').text(`Wind Speed: ${windSpeed}Km/h`)
-	d3.select('#wind-speed').node().value = speed
+	d3.select('#wind-speed-box').text(`Wind Speed: ${cs(windSpeed)} ${unit}`)
+	d3.select('#wind-speed').node().value = cs(windSpeed)
+	posAirspeedAxis()
 	renderGraph()
 }
 
@@ -72,6 +83,8 @@ const curveArray = [
 // set the ranges
 const x = d3.scaleLinear().range([0, width]);
 const y = d3.scaleLinear().range([0, height]);
+x.domain([0, MAX_SPEED]);
+y.domain([0, -MAX_SINK]);
 
 const svg = d3.select("body > svg")
 	.attr("width", width + margin.left + margin.right)
@@ -89,11 +102,6 @@ let data = [
 	{x: 50, y: 1.85, label: 'Top Speed'}
 ]
 
-
-x.domain([0, MAX_SPEED]);
-y.domain([0, -MAX_SINK]);
-
-
 svg.append("path")
 	.attr('id', 'curve-path')
 	.attr('class', 'line');
@@ -108,50 +116,84 @@ svg.append('text')
 	.attr('startOffset', '10%')
 	.attr('id', 'tangent-text');
 
-// Add the X Axis
-svg.append("g")
-	.attr("class", "axis")
-	//.attr("transform", "translate(0," + height + ")")
-	.call(d3.axisTop(x))
-	.append('text')
-		.attr('x', width + 10)
+function renderAxes() {
+
+	d3.select('#axis-g').remove()
+	const g = svg.append('g').attr('id', 'axis-g')
+	// Add the X Axis
+	g.append("g")
+		.attr("class", "axis")
+		//.attr("transform", "translate(0," + height + ")")
+		.call(d3.axisTop(x).tickFormat(cs))
+
+	g.append('g')
+		.attr('id', 'air-speed-axis')
+		.attr('transform', 'translate(0, -30)')
+		.attr('class', 'axis')
+		.call(d3.axisTop(x).tickFormat(cs))
+
+	g.append('rect')
+		.attr('x', width + 12)
+		.attr('y', -50)
+		.attr('width', 200)
+		.attr('height', 100)
+		.attr('fill', '#fff')
+	g.append('text')
+		.attr('x', width + 15)
+		.attr('y', -29)
+		.attr('text-anchor', 'start')
+		.text(`${unit} Air Speed`)
+	g.append('text')
+		.attr('x', width + 15)
 		.attr('y', -9)
 		.attr('text-anchor', 'start')
-		.text('Km/h Ground Speed')
-svg.append('g')
-	.attr('id', 'air-speed-axis')
-	.attr('transform', 'translate(0, -30)')
-	.attr('class', 'axis')
-	.call(d3.axisTop(x))
-	.append('text')
-		.attr('x', width + 10)
-		.attr('y', -9)
-		.attr('text-anchor', 'start')
-		.text('Km/h Air Speed')
+		.text(`${unit} Ground Speed`)
 
-// Wind Speed box
-const gt = svg.append('g')
-	.attr('transform', `translate(${width - 140}, 20)`)
-gt.append('rect')
-	.attr('width', 140)
-	.attr('height', 22)
-	.attr('class', 'air-speed-rect')
-gt.append('text')
-	.attr('id', 'air-speed-box')
-	.attr('x', 70)
-	.attr('y', 15)
-	.attr('text-anchor', 'middle')
-	.text('Wind Speed: 0Km/h')
+	// Wind Speed box
+	const gt = g.append('g')
+		.attr('transform', `translate(${width - 140}, 20)`)
+	gt.append('rect')
+		.attr('width', 140)
+		.attr('height', 22)
+		.attr('class', 'wind-speed-rect')
+	gt.append('text')
+		.attr('id', 'wind-speed-box')
+		.classed('unit-togg', true)
+		.attr('x', 70)
+		.attr('y', 15)
+		.attr('text-anchor', 'middle')
+		.text(`Wind Speed: ${cs(windSpeed)} ${unit}`)
 
-// Add the Y Axis
-svg.append("g")
-	.attr("class", "axis")
-	.call(d3.axisLeft(y));
+	// Add the Y Axis
+	g.append("g")
+		.attr("class", "axis")
+		.call(d3.axisLeft(y));
 
-function renderGraph() {
+	posAirspeedAxis();
+}
 
+svg.on('click', e => {
+	const t = d3.select(d3.event.target)
+	if (t.classed('label')) {
+		glideName = d3.event.target?.firstChild.nodeValue
+		renderGraph()
+	}
+	if (t.classed('unit-togg')) {
+		setUnit(unit === 'Km/h' ? 'mph' : 'Km/h')
+	}
+})
+
+renderAxes()
+
+function posAirspeedAxis() {
 	d3.select('#air-speed-axis')
 		.attr('transform', `translate(${x(windSpeed)}, -30)`)
+}
+
+let glideSpeed = 0
+let glideRatio = 0
+
+function renderGraph() {
 
 	// format the data
 	data.forEach(function (d) {
@@ -181,14 +223,14 @@ function renderGraph() {
 
 	const glideP = data2.find(d => d.label === glideName)
 
-	const glideSpeed = glideP.xx
-	const glide = - glideSpeed / (glideP.yy * 3.6)
-	svg.select('#tangent-text')
-		.text('Glide: ' + glide.toFixed(1) + ':1 at ' + glideSpeed.toFixed(1) + 'Km/h')
+	glideSpeed = glideP.xx
+	glideRatio = - glideSpeed / (glideP.yy * 3.6)
+	renderGlideText()
 
 	const sc = 1.3
 	svg.select('path#tangent')
 		.attr('d', `m0,0 l${x(glideP.xx) * sc},${y(glideP.yy) * sc}`)
+		.classed('red', glideName === 'Best Glide')
 
 
 	// Add the scatterplot
@@ -214,4 +256,22 @@ function renderGraph() {
 		.text(d => d.label)
 }
 
+function renderGlideText() {
+	svg.select('#tangent-text')
+		.text('Glide: ' + glideRatio.toFixed(1) + ':1 at ' + cs(glideSpeed) + ' ' + unit)
+}
+
 renderGraph();
+
+// initConvertSpans
+d3.selectAll('.convert-speed').each(function () {
+	const el = this
+	el.dataset.value = el.innerText.split(' ')[0]
+})
+
+function updateSpeedsInTexts() {
+	d3.selectAll('.convert-speed').each(function () {
+		const el = this
+		el.innerText = cs(Number(el.dataset.value)) + ' ' + unit
+	})
+}
