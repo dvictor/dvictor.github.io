@@ -110,10 +110,12 @@ svg.append("path")
 svg.append('path')
 	.attr('id', 'tangent')
 	.attr('class', 'line')
+svg.append('path')
+	.attr('id', 'tangent2')
 
 svg.append('text')
 	.append('textPath')
-	.attr('href', '#tangent')
+	.attr('href', '#tangent2')
 	.attr('startOffset', '10%')
 	.attr('id', 'tangent-text');
 
@@ -223,6 +225,8 @@ function renderGraph() {
 		.attr('d', `m0,0 l${x(glideP.xx) * sc},${y(glideP.yy) * sc}`)
 		.classed('red', glideName === 'Best Glide')
 
+	svg.select('path#tangent2')
+		.attr('d', `m0,-3 l${x(glideP.xx) * sc},${y(glideP.yy) * sc}`)
 
 	// Add the scatterplot
 	svg.selectAll('circle').remove()
