@@ -167,8 +167,11 @@ svg.on('click', e => {
 		renderGraph()
 	}
 })
-d3.select('#wind-speed-box').on('click', () => {
-	setUnit(unit === 'Km/h' ? 'mph' : 'Km/h')
+d3.select('.kph-btn').on('click', () => {
+	setUnit('Km/h')
+})
+d3.select('.mph-btn').on('click', () => {
+	setUnit('mph')
 })
 
 renderAxes()

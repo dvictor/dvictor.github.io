@@ -39,6 +39,18 @@ text.label {
     stroke: #ff000077;
 }
 
+.btn {
+    display: inline-block;
+    padding: 9px 12px;
+    border-radius: 5px;
+    border: solid 2px #ccc;
+    cursor: pointer;
+    user-select: none;
+}
+.btn:active {
+    background: #ff0000;
+}
+
 #controls {
     display: inline-block;
     vertical-align: top;
@@ -128,6 +140,11 @@ h2 > span {
     text-align: center;
     border: solid 2px #bbb;
     border-radius: 5px;
+}
+#unit-over {
+    position: absolute;
+    top: 200px;
+    right: 20px;
 }
 #wind-speed {
     margin-top: 10px;
