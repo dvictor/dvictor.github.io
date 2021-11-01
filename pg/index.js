@@ -1,9 +1,9 @@
 const MAX_SPEED = 80
-const MAX_SINK = 3
+const MAX_SINK = 2
 // dimensions and margins of the graph
-const margin = {top: 50, right: 150, bottom: 30, left: 50},
+const margin = {top: 70, right: 150, bottom: 30, left: 40},
 	width = 960 - margin.left - margin.right,
-	height = 470 - margin.top - margin.bottom;
+	height = 350 - margin.top - margin.bottom;
 
 d3.select('#wind-speed').on('input', () => {
 	setWindSpeed(+d3.event.target.value)
@@ -43,7 +43,8 @@ d3.select('#prev-btn').on('click', () => {
 	updLesson()
 })
 function updLesson() {
-	d3.select('.cases > div').style('margin-left', -300 * (lesson-1) + 'px')
+	const w = d3.select('.cases').node().clientWidth
+	d3.select('.cases > div').style('margin-left', -w * (lesson-1) + 'px')
 	resetLesson()
 	lessonAction[lesson]()
 }
@@ -86,7 +87,7 @@ const y = d3.scaleLinear().range([0, height]);
 x.domain([0, MAX_SPEED]);
 y.domain([0, -MAX_SINK]);
 
-const svg = d3.select("body > svg")
+const svg = d3.select("#svg")
 	.attr("width", width + margin.left + margin.right)
 	.attr("height", height + margin.top + margin.bottom)
 	.append("g")
@@ -149,20 +150,7 @@ function renderAxes() {
 		.attr('text-anchor', 'start')
 		.text(`${unit} Ground Speed`)
 
-	// Wind Speed box
-	const gt = g.append('g')
-		.attr('transform', `translate(${width - 140}, 20)`)
-	gt.append('rect')
-		.attr('width', 140)
-		.attr('height', 22)
-		.attr('class', 'wind-speed-rect')
-	gt.append('text')
-		.attr('id', 'wind-speed-box')
-		.classed('unit-togg', true)
-		.attr('x', 70)
-		.attr('y', 15)
-		.attr('text-anchor', 'middle')
-		.text(`Wind Speed: ${cs(windSpeed)} ${unit}`)
+	d3.select('#wind-speed-box').text(`Wind Speed: ${cs(windSpeed)} ${unit}`)
 
 	// Add the Y Axis
 	g.append("g")
@@ -178,9 +166,9 @@ svg.on('click', e => {
 		glideName = d3.event.target?.firstChild.nodeValue
 		renderGraph()
 	}
-	if (t.classed('unit-togg')) {
-		setUnit(unit === 'Km/h' ? 'mph' : 'Km/h')
-	}
+})
+d3.select('#wind-speed-box').on('click', () => {
+	setUnit(unit === 'Km/h' ? 'mph' : 'Km/h')
 })
 
 renderAxes()

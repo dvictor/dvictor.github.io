@@ -1,72 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>Paragliding Polar Curve</title>
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<svg></svg>
-<div id="controls">
-    <div class="cases-out">
-        <div class="nav">
-            <span id="prev-btn">« Prev</span>
-            <span id="next-btn">Next »</span>
+<div>
+    <div id="svg-parent">
+        <svg id="svg"></svg>
+        <div id="wind-speed-over">
+            <div id="wind-speed-box"></div>
+            <input type="range" min="-30" max="30" id="wind-speed">
         </div>
-        <div class="cases">
-            <div>
+    </div>
+
+    <div id="controls">
+        <div class="cases-out">
+            <div class="nav">
+                <span id="prev-btn">« Prev</span>
+                <span id="next-btn">Next »</span>
+            </div>
+            <div class="cases">
                 <div>
-                    <h2>Lesson 1</h2>
-                    <p>Zero Wind: ground speed and air speed are the same.<br>
-                    Identify the key points on the polar curve. Click the labels of each point on the graph.
-                    <ul>
-                        <li>Stall Point: from this point, if you apply any more break, the wing will stall.</li>
-                        <li>Minimum Sink: at this level of braking, the glider sinks the slowest.</li>
-                        <li>Trim Speed: the speed you get when you apply no break and no speed bar.</li>
-                        <li>Top Speed: the maximum horizontal speed - speed bar is fully pressed.</li>
-                    </ul>
-                    Click the radio buttons to display the glide ratio for each key point.</p>
-                </div><div>
-                    <h2>Lesson 2</h2>
-                    <p>Change the wind speed below to see how it affects best glide.<br>
-                    A negative value is head-wind.<br>
-                    A positive one is tail-wind.<br>
-                    <br>
-                    Notice how the air speed X axis moves together with the polar curve.
-                    If the air moves, the glider still flies the same relative to the air,
-                    but the ground speed is different.<br>
-                    <br>
-                    The glide ratio indicated is for the ground speed, this is the one that you care about.
-                    </p>
-                    <label>
-                        <div>Wind Speed</div>
-                        <input type="range" min="-30" max="30" id="wind-speed">
-                    </label>
-                </div><div>
-                    <h2>Lesson 3</h2>
-                    <p>
-                        <b>Head-Wind <span class="convert-speed">15 Km/h</span></b><br>
-                        <br>
-                        See how best glide position has moved lower and to the right on the curve.<br>
-                        <br>
-                        For best glide you now apply some speedbar.<br>
-                        <br>
-                        You will sink faster but with greater horizontal speed.
-                    </p>
-                </div><div>
-                    <h2>Lesson 4</h2>
-                    <p>
-                        <b>Tail-Wind <span class="convert-speed">15 Km/h</span></b>
-                        <br>
-                        Apply some break to improve your glide.
-                    </p>
-                </div><div>
-                    <h2>Lesson 5</h2>
-                    For this particular glider, at <span class="convert-speed">21 Km/h</span>
-                    tail-wind, the glide ratio
-                    at minimum sink is the same as at trim speed.
-                    Still, best glide is somewhere
-                    in the middle od the two.
+                    <div>
+                        <h2><span>Lesson 1 -</span> Identify key points</h2>
+                        <p>
+                            Identify the key points on the polar curve. Click the labels of each point on the graph.<br>
+                            When there's no wind, ground speed and air speed are the same.<br>
+                        <ul>
+                            <li>Stall Point: from this point, if you apply any more break, the wing will stall.</li>
+                            <li>Minimum Sink: at this level of braking, the glider sinks the slowest.</li>
+                            <li>Trim Speed: the speed you get when you apply no break and no speed bar.</li>
+                            <li>Top Speed: the maximum horizontal speed - speed bar is fully pressed.</li>
+                        </ul>
+                        </p>
+                    </div><div>
+                        <h2><span>Lesson 2 -</span> Wind speed effect</h2>
+                        <p>
+                            Change the wind speed below to see how it affects best glide.<br>
+                            A negative value is headwind. A positive one is tailwind.<br>
+                            Notice how the air speed X axis moves together with the polar curve.<br>
+                            If the air moves, the glider still flies the same relative to the air,
+                            but the ground speed is different.<br>
+                            <br>
+                            The glide ratio indicated is for the ground speed, this is the one that you care about.
+                        </p>
+                    </div><div>
+                        <h2><span>Lesson 3 -</span> Headwind</h2>
+                        <p>
+                            <b>You have a headwind of <span class="convert-speed">15 Km/h</span></b><br>
+                            See how best glide position has moved lower and to the right on the curve.<br>
+                            <br>
+                            For best glide you now apply some speedbar.<br>
+                            <br>
+                            You will sink faster but with greater horizontal speed.
+                        </p>
+                    </div><div>
+                        <h2><span>Lesson 4 -</span> Tailwind</h2>
+                        <p>
+                            <b>You have a tailwind of <span class="convert-speed">15 Km/h</span></b>
+                            <br>
+                            Apply some break to improve your glide.
+                        </p>
+                    </div><div>
+                        <h2><span>Lesson 5 -</span> Same gide at min sink and trim speed</h2>
+                        For this particular glider, at <span class="convert-speed">21 Km/h</span>
+                        tailwind, the glide ratio
+                        at minimum sink is the same as at trim speed.<br>
+                        The best glide is somewhere in the middle of the two.
+                    </div>
                 </div>
             </div>
         </div>
