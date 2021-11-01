@@ -46,9 +46,10 @@ text.label {
     border: solid 2px #ccc;
     cursor: pointer;
     user-select: none;
+    background: #fff;
 }
 .btn:active {
-    background: #ff0000;
+    background: #bbbbff;
 }
 
 #controls {
@@ -126,7 +127,7 @@ text.label {
 }
 
 h2 {
-    margin-top: 30px;
+    margin-top: 45px;
 }
 h2 > span {
     color: #777;

@@ -141,7 +141,7 @@ function renderAxes() {
 		.attr('fill', '#fff')
 	g.append('text')
 		.attr('x', width + 15)
-		.attr('y', -29)
+		.attr('y', -39)
 		.attr('text-anchor', 'start')
 		.text(`${unit} Air Speed`)
 	g.append('text')
