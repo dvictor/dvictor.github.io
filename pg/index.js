@@ -69,10 +69,12 @@ let windSpeed = 0
 
 function setWindSpeed(speed) {
 	windSpeed = speed
-	d3.select('#wind-speed-box').text(`Wind Speed: ${cs(windSpeed)} ${unit}`)
-	d3.select('#wind-speed').node().value = cs(windSpeed)
+	const label = speed === 0 ? 'Wind Speed' : (speed < 0 ? 'Headwind' : 'Tailwind')
+	d3.select('#wind-speed-box').text(label + `: ${cs(Math.abs(speed))} ${unit}`)
+	d3.select('#wind-speed').node().value = cs(speed)
 	posAirspeedAxis()
 	renderGraph()
+	sockSpeed(speed)
 }
 
 
@@ -127,6 +129,37 @@ svg.append('path')
 svg.append('text')
 	.attr('id', 'x-value-text')
 	.attr('y', 20)
+
+
+const sockSpeed = function () {
+	const d = 'm 33.9,-8.2 v 0 c 0,-0 0,-0 0,-0 2.9,6.6 2.9,12.4 .2,18.9 L 61.9,8.7 62.3,-1.7 Z M 12.6,-12.6 v 0 c 0,-0 0,-0 0,-0 1.8,-2.3e-4 3.3,5.7 3.3,12.9 -8.8e-4,6.6 -1.3,12.2 -3,12.8 l 19.9,-2.2 c 2.6,-6.4 2.4,-12.7 -0,-19.4 z m -1.7,0 c -.2,0 -.5,.1 -.7,.3 v -0 l -0,0 L 0,.3 10,12.6 c .1,-0 .6,.4 .9,.4 1.8,3.1e-4 3.3,-5.7 3.3,-12.9 3e-5,-7.1 -1.4,-12.9 -3.3,-12.9 z M 8.2,-7 C 7.8,-4.9 7.6,-2.3 7.6,.2 7.6,2.9 7.8,5.5 8.2,7.6 L 2.2,.3 Z'
+	const sg1 = svg.append('g')
+		.attr('transform', 'scale(.8,.8), translate(855,75)')
+	sg1.append('rect')
+		.attr('width', 5)
+		.attr('height', 65)
+		.attr('x', -6)
+		.attr('y', -5)
+		.attr('fill', '#777')
+
+	const sg2 = sg1.append('g')
+		.attr('transform', 'rotate(90)')
+	sg2.append('path')
+		.attr('fill', 'orange')
+		.attr('d', d)
+
+	return function (speed) {
+		if (speed === 0) {
+			sg2.attr('transform', `translate(-3, 0), rotate(90)`)
+		} else if (speed < 0) {
+			sg2.attr('transform', `translate(-7, 0), rotate(${-3 * speed - 90}), scale(-1, 1)`)
+		} else {
+			sg2.attr('transform', `rotate(${90 - 3 * speed})`)
+		}
+	}
+}()
+
+sockSpeed(windSpeed)
 
 function renderAxes() {
 
