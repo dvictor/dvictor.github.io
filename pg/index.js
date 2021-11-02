@@ -55,6 +55,8 @@ function setUnit(u) {
 	renderAxes()
 	renderGlideText()
 	updateSpeedsInTexts()
+	d3.select('.kph-btn').classed('selected', unit === 'Km/h')
+	d3.select('.mph-btn').classed('selected', unit === 'mph')
 }
 function cs(kph) {
 	return (unit === 'Km/h' ? kph : kph * 0.621371).toFixed(1)
@@ -116,8 +118,15 @@ svg.append('path')
 svg.append('text')
 	.append('textPath')
 	.attr('href', '#tangent2')
-	.attr('startOffset', '10%')
+	.attr('startOffset', '20%')
 	.attr('id', 'tangent-text');
+
+svg.append('path')
+	.attr('id', 'x-value-line')
+	.attr('class', 'line value-line')
+svg.append('text')
+	.attr('id', 'x-value-text')
+	.attr('y', 20)
 
 function renderAxes() {
 
@@ -142,15 +151,15 @@ function renderAxes() {
 		.attr('height', 100)
 		.attr('fill', '#fff')
 	g.append('text')
-		.attr('x', width + 15)
+		.attr('x', width + 20)
 		.attr('y', -39)
 		.attr('text-anchor', 'start')
-		.text(`${unit} Air Speed`)
+		.text(`Air Speed`)
 	g.append('text')
-		.attr('x', width + 15)
+		.attr('x', width + 20)
 		.attr('y', -9)
 		.attr('text-anchor', 'start')
-		.text(`${unit} Ground Speed`)
+		.text(`Ground Speed`)
 
 	d3.select('#wind-speed-box').text(`Wind Speed: ${cs(windSpeed)} ${unit}`)
 
@@ -224,9 +233,12 @@ function renderGraph() {
 	svg.select('path#tangent')
 		.attr('d', `m0,0 l${x(glideP.xx) * sc},${y(glideP.yy) * sc}`)
 		.classed('red', glideName === 'Best Glide')
-
 	svg.select('path#tangent2')
 		.attr('d', `m0,-3 l${x(glideP.xx) * sc},${y(glideP.yy) * sc}`)
+	svg.select('path#x-value-line')
+		.attr('d', `m${x(glideP.xx)},0 l0,${y(glideP.yy)}`)
+	svg.select('#x-value-text')
+		.attr('x', x(glideP.xx) + 5)
 
 	// Add the scatterplot
 	svg.selectAll('circle').remove()
@@ -253,7 +265,9 @@ function renderGraph() {
 
 function renderGlideText() {
 	svg.select('#tangent-text')
-		.text('Glide: ' + glideRatio.toFixed(1) + ':1 at ' + cs(glideSpeed) + ' ' + unit)
+		.text('Glide: ' + glideRatio.toFixed(1) + ' : 1')
+	svg.select('#x-value-text')
+		.text(cs(glideSpeed) + ' ' + unit)
 }
 
 renderGraph();

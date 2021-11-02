@@ -4,9 +4,11 @@
     stroke: steelblue;
     stroke-width: 2px;
 }
-
 .line#tangent {
     stroke: #77777799;
+}
+.value-line {
+    stroke: #00000011;
 }
 
 body {
@@ -48,8 +50,10 @@ text.label {
     user-select: none;
     background: #fff;
 }
-.btn:active {
-    background: #bbbbff;
+.btn:active, .btn.selected {
+    background: #0474ff;
+    border-color: #0474ff;
+    color: #fff;
 }
 
 #controls {
