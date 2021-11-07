@@ -113,7 +113,7 @@ text.label {
 }
 
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1320px) {
     div#controls {
         background: #fff;
         margin-bottom: 20px;
