@@ -9,20 +9,23 @@
             color: #444;
             white-space: nowrap;
             font-size: 16px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
         sup {
             font-size: 10px;
         }
         .zone {
-            margin-bottom: 10px;
+            margin-bottom: -2px;
         }
         .swatch {
             text-align: center;
             border: solid 1px #fff;
-            border-bottom-width: 2px;
+            border-bottom-width: 0;
             display: inline-block;
             width: 32px;
-            padding: 4px;
+            padding: 10px;
             margin-right: -1px;
             background: #e3e3e3;
             cursor: default;
@@ -30,27 +33,37 @@
         .swatch.on {
             background: #c0ef8f;
         }
-        .swatch.selected {
+        .swatch.selected, .zone:hover .swatch {
             background: #d1d1d1;
         }
-        .swatch.selected.on {
+        .swatch.selected.on, .zone:hover .swatch.on  {
             background: #a4cf78;
+        }
+        .zone {
+            border-right: solid #fff 3px;
+            padding-right: 15px;
+        }
+        .zone:hover .name {
+            background: #e3e3e3;
         }
         .name {
             display: inline-block;
-            margin-left: 10px;
+            padding: 9px;
+            margin: 1px;
+            margin-bottom: 2px;
+            cursor: default;
         }
     </style>
 </head>
 <body>
-
+    <div></div>
     <script>
-        let root = document.body;
+        let root = document.querySelector('body > div');
 
         function addZone(root, name, tz) {
             let parent = document.createElement('div')
             parent.classList.add('zone')
-            root.appendChild(parent)
+            root.append(parent)
 
             let today = new Date((new Date).toDateString())
             today.setHours(12)
@@ -101,5 +114,6 @@
 
         toggleColumn((new Date).getHours())
 </script>
+
 </body>
 </html>
